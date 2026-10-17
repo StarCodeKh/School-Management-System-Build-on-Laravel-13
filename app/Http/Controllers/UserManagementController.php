@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Hash;
-use App\Rules\MatchOldPassword;
 use App\Enums\Role;
+use App\Models\User;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Models\User;
-use Auth;
+use Illuminate\Validation\Rules\Password;
 use Log;
-use DB;
 
 class UserManagementController extends Controller
 {
@@ -26,99 +21,100 @@ class UserManagementController extends Controller
     /** user view */
     public function userView($id)
     {
-        $users = User::where('user_id',$id)->first();
+        $users = User::where('user_id', $id)->first();
         $roles = Role::cases();
-        return view('usermanagement.user_update',compact('users','roles'));
+
+        return view('usermanagement.user_update', compact('users', 'roles'));
     }
 
     /** User Update */
     public function userUpdate(Request $request)
     {
         $request->validate([
-            'user_id'       => 'required|exists:users,user_id',
-            'name'          => 'required|string|max:255',
-            'email'         => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($request->user_id, 'user_id')],
-            'role_name'     => ['required', Rule::enum(Role::class)],
+            'user_id' => 'required|exists:users,user_id',
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($request->user_id, 'user_id')],
+            'role_name' => ['required', Rule::enum(Role::class)],
             'date_of_birth' => 'nullable|date',
-            'phone_number'  => 'nullable|string|max:20',
+            'phone_number' => 'nullable|string|max:20',
         ]);
 
         DB::beginTransaction();
         try {
-            if (Gate::allows('manage-users'))
-            {
-                $name          = $request->name;
-                $email         = $request->email;
-                $role_name     = $request->role_name;
-                $position      = $request->position;
-                $phone         = $request->phone_number;
+            if (Gate::allows('manage-users')) {
+                $name = $request->name;
+                $email = $request->email;
+                $role_name = $request->role_name;
+                $position = $request->position;
+                $phone = $request->phone_number;
                 $date_of_birth = $request->date_of_birth;
-                $department    = $request->department;
-                $status        = $request->status;
-    
+                $department = $request->department;
+                $status = $request->status;
+
                 $image_name = $request->hidden_avatar;
                 $image = $request->file('avatar');
-    
-                if($image_name == 'photo_defaults.jpg') {
+
+                if ($image_name == 'photo_defaults.jpg') {
                     if ($image != '') {
-                        $image_name = rand() . '.' . $image->getClientOriginalExtension();
+                        $image_name = rand().'.'.$image->getClientOriginalExtension();
                         $image->move(public_path('/images/'), $image_name);
                     }
                 } else {
-                    if($image != '') {
-                        $oldImagePath = public_path('/images/') . $image_name;
+                    if ($image != '') {
+                        $oldImagePath = public_path('/images/').$image_name;
                         if (file_exists($oldImagePath)) {
                             unlink($oldImagePath);
                         }
-                        $image_name = rand() . '.' . $image->getClientOriginalExtension();
+                        $image_name = rand().'.'.$image->getClientOriginalExtension();
                         $image->move(public_path('/images/'), $image_name);
                     }
                 }
-    
+
                 $update = [
-                    'name'          => $name,
-                    'role_name'     => $role_name,
-                    'email'         => $email,
-                    'position'      => $position,
-                    'phone_number'  => $phone,
+                    'name' => $name,
+                    'role_name' => $role_name,
+                    'email' => $email,
+                    'position' => $position,
+                    'phone_number' => $phone,
                     'date_of_birth' => $date_of_birth,
-                    'department'    => $department,
-                    'status'        => $status,
-                    'avatar'        => $image_name,
+                    'department' => $department,
+                    'status' => $status,
+                    'avatar' => $image_name,
                 ];
-    
+
                 User::where('user_id', $request->user_id)->firstOrFail()->update($update);
             } else {
                 Log::warning('Unauthorized user update attempt', [
                     'user_id' => $request->user_id,
-                    'role'    => $request->user()->role_name?->value,
+                    'role' => $request->user()->role_name?->value,
                 ]);
                 DB::rollback();
+
                 return redirect()->back()->with('error', 'User update failed: Unauthorized access.');
             }
-    
+
             DB::commit();
+
             return redirect()->back()->with('success', 'User updated successfully :)');
-    
+
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('User update failed', [
-                'error'  => $e->getMessage(),
+                'error' => $e->getMessage(),
                 'user_id' => $request->user_id,
                 'request_data' => $request->except(['avatar']),
             ]);
-    
+
             return redirect()->back()->with('error', 'User update failed. Please try again.');
         }
     }
-    
+
     /** user delete */
     public function userDelete(Request $request)
     {
         DB::beginTransaction();
         try {
-            if (Gate::allows('manage-users'))
-            {
+            if (Gate::allows('manage-users')) {
                 $user = User::where('user_id', $request->user_id)->firstOrFail();
                 $user->delete();
 
@@ -129,15 +125,18 @@ class UserManagementController extends Controller
                 }
             } else {
                 DB::rollback();
+
                 return redirect()->back()->with('error', 'User deleted fail :(');
             }
 
             DB::commit();
+
             return redirect()->back()->with('success', 'User deleted successfully :)');
-    
-        } catch(\Exception $e) {
+
+        } catch (\Exception $e) {
             Log::info($e);
             DB::rollback();
+
             return redirect()->back()->with('error', 'User deleted fail :(');
         }
     }
@@ -146,41 +145,42 @@ class UserManagementController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'current_password'     => ['required', new MatchOldPassword],
-            'new_password'         => ['required'],
-            'new_confirm_password' => ['same:new_password'],
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', Password::min(8), 'different:current_password'],
+            'new_confirm_password' => ['required', 'same:new_password'],
         ]);
 
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-        DB::commit();
+        // the User model's "hashed" cast hashes the new password on save
+        $request->user()->update(['password' => $request->new_password]);
+
         return redirect()->intended('home')->with('success', 'User change successfully :)');
     }
 
     /** get users data */
     public function getUsersData(Request $request)
     {
-        $draw            = $request->get('draw');
-        $start           = $request->get("start");
-        $rowPerPage      = $request->get("length"); // total number of rows per page
+        $draw = $request->get('draw');
+        $start = $request->get('start');
+        $rowPerPage = $request->get('length'); // total number of rows per page
         $columnIndex_arr = $request->get('order');
-        $columnName_arr  = $request->get('columns');
-        $order_arr       = $request->get('order');
-        $search_arr      = $request->get('search');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
 
-        $columnIndex     = $columnIndex_arr[0]['column']; // Column index
-        $columnName      = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-        $searchValue     = $search_arr['value']; // Search value
+        $searchValue = $search_arr['value']; // Search value
 
-        $users =  DB::table('users');
+        $users = DB::table('users');
         $totalRecords = $users->count();
 
         $totalRecordsWithFilter = $users->where(function ($query) use ($searchValue) {
-            $query->where('name', 'like', '%' . $searchValue . '%');
-            $query->orWhere('email', 'like', '%' . $searchValue . '%');
-            $query->orWhere('position', 'like', '%' . $searchValue . '%');
-            $query->orWhere('phone_number', 'like', '%' . $searchValue . '%');
-            $query->orWhere('status', 'like', '%' . $searchValue . '%');
+            $query->where('name', 'like', '%'.$searchValue.'%');
+            $query->orWhere('email', 'like', '%'.$searchValue.'%');
+            $query->orWhere('position', 'like', '%'.$searchValue.'%');
+            $query->orWhere('phone_number', 'like', '%'.$searchValue.'%');
+            $query->orWhere('status', 'like', '%'.$searchValue.'%');
         })->count();
 
         if ($columnName == 'name') {
@@ -188,17 +188,17 @@ class UserManagementController extends Controller
         }
         $records = $users->orderBy($columnName, $columnSortOrder)
             ->where(function ($query) use ($searchValue) {
-                $query->where('name', 'like', '%' . $searchValue . '%');
-                $query->orWhere('email', 'like', '%' . $searchValue . '%');
-                $query->orWhere('position', 'like', '%' . $searchValue . '%');
-                $query->orWhere('phone_number', 'like', '%' . $searchValue . '%');
-                $query->orWhere('status', 'like', '%' . $searchValue . '%');
+                $query->where('name', 'like', '%'.$searchValue.'%');
+                $query->orWhere('email', 'like', '%'.$searchValue.'%');
+                $query->orWhere('position', 'like', '%'.$searchValue.'%');
+                $query->orWhere('phone_number', 'like', '%'.$searchValue.'%');
+                $query->orWhere('status', 'like', '%'.$searchValue.'%');
             })
             ->skip($start)
             ->take($rowPerPage)
             ->get();
         $data_arr = [];
-        
+
         foreach ($records as $key => $record) {
             $modify = '
                 <td class="text-right">
@@ -230,7 +230,7 @@ class UserManagementController extends Controller
                 $status = '<td><span class="badge bg-success-dark">'.$record->status.'</span></td>';
             } elseif ($record->status === 'Disable') {
                 $status = '<td><span class="badge bg-danger-dark">'.$record->status.'</span></td>';
-            }  elseif ($record->status === 'Inactive') {
+            } elseif ($record->status === 'Inactive') {
                 $status = '<td><span class="badge badge-warning">'.$record->status.'</span></td>';
             } else {
                 $status = '<td><span class="badge badge-secondary">'.$record->status.'</span></td>';
@@ -248,26 +248,27 @@ class UserManagementController extends Controller
                     </div>
                 </td>
             ';
-           
-            $data_arr [] = [
-                "user_id"      => $record->user_id,
-                "avatar"       => $avatar,
-                "name"         => $record->name,
-                "email"        => $record->email,
-                "position"     => $record->position,
-                "phone_number" => $record->phone_number,
-                "join_date"    => $record->join_date,
-                "status"       => $status, 
-                "modify"       => $modify, 
+
+            $data_arr[] = [
+                'user_id' => $record->user_id,
+                'avatar' => $avatar,
+                'name' => $record->name,
+                'email' => $record->email,
+                'position' => $record->position,
+                'phone_number' => $record->phone_number,
+                'join_date' => $record->join_date,
+                'status' => $status,
+                'modify' => $modify,
             ];
         }
 
         $response = [
-            "draw"                 => intval($draw),
-            "iTotalRecords"        => $totalRecords,
-            "iTotalDisplayRecords" => $totalRecordsWithFilter,
-            "aaData"               => $data_arr
+            'draw' => intval($draw),
+            'iTotalRecords' => $totalRecords,
+            'iTotalDisplayRecords' => $totalRecordsWithFilter,
+            'aaData' => $data_arr,
         ];
+
         return response()->json($response);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Subject;
-use Log;
 use DB;
+use Illuminate\Http\Request;
+use Log;
 
 class SubjectController extends Controller
 {
@@ -13,7 +13,8 @@ class SubjectController extends Controller
     public function subjectList()
     {
         $subjectList = Subject::all();
-        return view('subjects.subject_list',compact('subjectList'));
+
+        return view('subjects.subject_list', compact('subjectList'));
     }
 
     /** subject add */
@@ -28,9 +29,9 @@ class SubjectController extends Controller
         // Validate request input
         $request->validate([
             'subject_name' => 'required|string',
-            'class'        => 'required|string',
+            'class' => 'required|string',
         ]);
-        
+
         DB::beginTransaction();
         try {
             // Create a new Subject record
@@ -47,6 +48,7 @@ class SubjectController extends Controller
                 'subject_name' => $request->subject_name,
                 'class' => $request->class,
             ]);
+
             return redirect()->back()->with('success', 'Subject record saved successfully!');
 
         } catch (\Exception $e) {
@@ -55,15 +57,17 @@ class SubjectController extends Controller
                 'error' => $e->getMessage(),
                 'request' => $request->all(),
             ]);
-            return redirect()->back()->with('error', 'Failed to save Subject record: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to save Subject record: '.$e->getMessage());
         }
     }
 
     /** subject edit view */
     public function subjectEdit($subject_id)
     {
-        $subjectEdit = Subject::where('subject_id',$subject_id)->first();
-        return view('subjects.subject_edit',compact('subjectEdit'));
+        $subjectEdit = Subject::where('subject_id', $subject_id)->first();
+
+        return view('subjects.subject_edit', compact('subjectEdit'));
     }
 
     /** Update Record */
@@ -74,31 +78,33 @@ class SubjectController extends Controller
             // Prepare update data
             $updateRecord = [
                 'subject_name' => $request->subject_name,
-                'class'        => $request->class,
+                'class' => $request->class,
             ];
-    
+
             // Update the Subject record
             Subject::where('subject_id', $request->subject_id)->update($updateRecord);
-    
+
             // Commit the transaction
             DB::commit();
-    
+
             // Log success
             Log::info('Subject record updated successfully', [
-                'subject_id'   => $request->subject_id,
+                'subject_id' => $request->subject_id,
                 'subject_name' => $request->subject_name,
-                'class'        => $request->class,
+                'class' => $request->class,
             ]);
+
             return redirect()->back()->with('success', 'Subject record updated successfully!');
-    
+
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Failed to update Subject record', [
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
                 'subject_id' => $request->subject_id,
                 'request' => $request->all(),
             ]);
-            return redirect()->back()->with('error', 'Failed to update Subject record: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to update Subject record: '.$e->getMessage());
         }
     }
 
@@ -110,11 +116,12 @@ class SubjectController extends Controller
             $subject = Subject::where('subject_id', $request->subject_id)->first();
             if ($subject) {
                 Log::info('Subject record deleted', [
-                    'subject_id'   => $request->subject_id,
+                    'subject_id' => $request->subject_id,
                     'subject_name' => $subject->subject_name,
                 ]);
                 $subject->delete();
                 DB::commit();
+
                 return redirect()->back()->with('success', 'Subject record deleted successfully!');
             } else {
                 Log::warning('Subject record not found for deletion', [
@@ -122,17 +129,18 @@ class SubjectController extends Controller
                 ]);
 
                 DB::rollback();
+
                 return redirect()->back()->with('error', 'Subject record not found!');
             }
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Failed to delete Subject record', [
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
                 'subject_id' => $request->subject_id,
                 'request' => $request->all(),
             ]);
-            return redirect()->back()->with('error', 'Failed to delete Subject record: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to delete Subject record: '.$e->getMessage());
         }
     }
-
 }

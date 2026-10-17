@@ -27,18 +27,18 @@ return new class extends Migration
         // Insert data after creating the table
         $this->insertMenuData();
     }
-    
+
     protected function insertMenuData()
     {
         // Insert the "Dashboard" menu
         $dashboardMenuId = DB::table('menus')->insertGetId([
             'title' => 'Dashboard',
-            'icon'  => 'fas fa-tachometer-alt',
+            'icon' => 'fas fa-tachometer-alt',
             'route' => null,
             'active_routes' => json_encode(['home', 'teacher/dashboard', 'student/dashboard']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 1,
+            'sort_order' => 1,
             'is_active' => true,
         ]);
 
@@ -46,32 +46,32 @@ return new class extends Migration
         DB::table('menus')->insert([
             [
                 'title' => 'Admin Dashboard',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'home',
                 'active_routes' => json_encode(['home']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $dashboardMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Teacher Dashboard',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'teacher/dashboard',
                 'active_routes' => json_encode(['teacher/dashboard']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $dashboardMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
             [
                 'title' => 'Student Dashboard',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'student/dashboard',
                 'active_routes' => json_encode(['student/dashboard']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $dashboardMenuId,
-                'sort_order'     => 3,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
         ]);
@@ -79,12 +79,12 @@ return new class extends Migration
         // Insert the "User Management" menu
         $userManagementMenuId = DB::table('menus')->insertGetId([
             'title' => 'User Management',
-            'icon'  => 'fas fa-shield-alt',
+            'icon' => 'fas fa-shield-alt',
             'route' => null,
             'active_routes' => json_encode(['list/users']),
-            'pattern'   => 'view/user/edit/*',
+            'pattern' => 'view/user/edit/*',
             'parent_id' => null,
-            'sort_order'     => 2,
+            'sort_order' => 2,
             'is_active' => true,
         ]);
 
@@ -92,12 +92,12 @@ return new class extends Migration
         DB::table('menus')->insert([
             [
                 'title' => 'List Users',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'list/users',
                 'active_routes' => json_encode(['list/users']),
-                'pattern'   => 'view/user/edit/*',
+                'pattern' => 'view/user/edit/*',
                 'parent_id' => $userManagementMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
         ]);
@@ -105,12 +105,12 @@ return new class extends Migration
         // Insert the "Settings" menu
         $settingsMenuId = DB::table('menus')->insertGetId([
             'title' => 'Settings',
-            'icon'  => 'fas fa-cog',
+            'icon' => 'fas fa-cog',
             'route' => null,
             'active_routes' => json_encode(['setting/page']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 3,
+            'sort_order' => 3,
             'is_active' => true,
         ]);
 
@@ -118,67 +118,67 @@ return new class extends Migration
         DB::table('menus')->insert([
             [
                 'title' => 'General Settings',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'setting/page',
                 'active_routes' => json_encode(['setting/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $settingsMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
-            ]
+            ],
         ]);
 
         // Insert the "Students" menu
         $studentMenuId = DB::table('menus')->insertGetId([
             'title' => 'Students',
-            'icon'  => 'fas fa-graduation-cap',
+            'icon' => 'fas fa-graduation-cap',
             'route' => null,
             'active_routes' => json_encode(['student/list', 'student/grid', 'student/add/page']),
-            'pattern'   => 'student/edit/*|student/profile/*',
+            'pattern' => 'student/edit/*|student/profile/*',
             'parent_id' => null,
-            'sort_order'     => 4,
+            'sort_order' => 4,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Student List',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'student/list',
                 'active_routes' => json_encode(['student/list', 'student/grid']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $studentMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Student Add',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'student/add/page',
                 'active_routes' => json_encode(['student/add/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $studentMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
             [
                 'title' => 'Student Edit',
-                'icon'  => null,
+                'icon' => null,
                 'route' => null,
                 'active_routes' => json_encode([]),
-                'pattern'   => 'student/edit/*',
+                'pattern' => 'student/edit/*',
                 'parent_id' => $studentMenuId,
-                'sort_order'     => 3,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
             [
                 'title' => 'Student View',
-                'icon'  => null,
+                'icon' => null,
                 'route' => null,
                 'active_routes' => json_encode([]),
-                'pattern'   => 'student/profile/*',
+                'pattern' => 'student/profile/*',
                 'parent_id' => $studentMenuId,
-                'sort_order'     => 4,
+                'sort_order' => 4,
                 'is_active' => true,
             ],
         ]);
@@ -186,44 +186,44 @@ return new class extends Migration
         // Insert the "Teachers" menu
         $teacherMenuId = DB::table('menus')->insertGetId([
             'title' => 'Teachers',
-            'icon'  => 'fas fa-chalkboard-teacher',
+            'icon' => 'fas fa-chalkboard-teacher',
             'route' => null,
             'active_routes' => json_encode(['teacher/add/page', 'teacher/list/page']),
-            'pattern'   => 'teacher/edit/*',
+            'pattern' => 'teacher/edit/*',
             'parent_id' => null,
-            'sort_order'     => 5,
+            'sort_order' => 5,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Teacher List',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'teacher/list/page',
                 'active_routes' => json_encode(['teacher/list/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $teacherMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Teacher Add',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'teacher/add/page',
                 'active_routes' => json_encode(['teacher/add/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $teacherMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
             [
                 'title' => 'Teacher Edit',
-                'icon'  => null,
+                'icon' => null,
                 'route' => null,
                 'active_routes' => json_encode([]),
-                'pattern'   => 'teacher/edit/*',
+                'pattern' => 'teacher/edit/*',
                 'parent_id' => $teacherMenuId,
-                'sort_order'     => 3,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
         ]);
@@ -231,34 +231,34 @@ return new class extends Migration
         // Insert the "Departments" menu
         $departmentMenuId = DB::table('menus')->insertGetId([
             'title' => 'Departments',
-            'icon'  => 'fas fa-building',
+            'icon' => 'fas fa-building',
             'route' => null,
             'active_routes' => json_encode(['department/list/page']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 6,
+            'sort_order' => 6,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Department List',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'department/list/page',
                 'active_routes' => json_encode(['department/list/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $departmentMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Department Add',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'department/add/page',
                 'active_routes' => json_encode(['department/add/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $departmentMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
         ]);
@@ -266,34 +266,34 @@ return new class extends Migration
         // Insert the "Subjects" menu
         $subjectMenuId = DB::table('menus')->insertGetId([
             'title' => 'Subjects',
-            'icon'  => 'fas fa-book-reader',
+            'icon' => 'fas fa-book-reader',
             'route' => null,
             'active_routes' => json_encode(['subject/list/page']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 7,
+            'sort_order' => 7,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Subject List',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'subject/list/page',
                 'active_routes' => json_encode(['subject/list/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $subjectMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Subject Add',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'subject/add/page',
                 'active_routes' => json_encode(['subject/add/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $subjectMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
         ]);
@@ -301,34 +301,34 @@ return new class extends Migration
         // Insert the "Invoices" menu
         $invoiceMenuId = DB::table('menus')->insertGetId([
             'title' => 'Invoices',
-            'icon'  => 'fas fa-clipboard',
+            'icon' => 'fas fa-clipboard',
             'route' => null,
             'active_routes' => json_encode(['invoice/list/page']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 8,
+            'sort_order' => 8,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Invoices List',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'invoice/list/page',
                 'active_routes' => json_encode(['invoice/list/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $invoiceMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Add Invoice',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'invoice/add/page',
                 'active_routes' => json_encode(['invoice/add/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $invoiceMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
         ]);
@@ -336,54 +336,54 @@ return new class extends Migration
         // Insert the "Accounts" menu
         $accountsMenuId = DB::table('menus')->insertGetId([
             'title' => 'Accounts',
-            'icon'  => 'fas fa-file-invoice-dollar',
+            'icon' => 'fas fa-file-invoice-dollar',
             'route' => null,
             'active_routes' => json_encode(['account/fees/collections/page']),
-            'pattern'   => null,
+            'pattern' => null,
             'parent_id' => null,
-            'sort_order'     => 9,
+            'sort_order' => 9,
             'is_active' => true,
         ]);
 
         DB::table('menus')->insert([
             [
                 'title' => 'Fees Collection',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'account/fees/collections/page',
                 'active_routes' => json_encode(['account/fees/collections/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $accountsMenuId,
-                'sort_order'     => 1,
+                'sort_order' => 1,
                 'is_active' => true,
             ],
             [
                 'title' => 'Expenses',
-                'icon'  => null,
+                'icon' => null,
                 'route' => null,
                 'active_routes' => json_encode([]),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $accountsMenuId,
-                'sort_order'     => 2,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
             [
                 'title' => 'Salary',
-                'icon'  => null,
+                'icon' => null,
                 'route' => null,
                 'active_routes' => json_encode([]),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $accountsMenuId,
-                'sort_order'     => 3,
+                'sort_order' => 3,
                 'is_active' => true,
             ],
             [
                 'title' => 'Add Fees',
-                'icon'  => null,
+                'icon' => null,
                 'route' => 'add/fees/collection/page',
                 'active_routes' => json_encode(['add/fees/collection/page']),
-                'pattern'   => null,
+                'pattern' => null,
                 'parent_id' => $accountsMenuId,
-                'sort_order'     => 4,
+                'sort_order' => 4,
                 'is_active' => true,
             ],
         ]);

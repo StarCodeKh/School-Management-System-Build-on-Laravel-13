@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\App;
-use App\Rules\MatchOldPassword;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Carbon\Carbon;
-use Session;
 use Auth;
-use DB;
-
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Session;
 
 class LoginController extends Controller
 {
@@ -31,23 +24,23 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-    * Where to redirect users after login.
-    *
-    * @var string
-    */
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
     protected $redirectTo = '/home';
 
     /**
-    * Create a new controller instance.
-    *
-    * @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('guest')->except([
             'logout',
             'locked',
-            'unlock'
+            'unlock',
         ]);
     }
 
@@ -59,15 +52,15 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'email'    => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
-        
-        try {
-            $email     = $request->email;
-            $password  = $request->password;
 
-            if (Auth::attempt(['email'=>$email,'password'=>$password])) {
+        try {
+            $email = $request->email;
+            $password = $request->password;
+
+            if (Auth::attempt(['email' => $email, 'password' => $password])) {
                 $user = Auth::User();
                 Session::put('name', $user->name);
                 Session::put('email', $user->email);
@@ -78,17 +71,18 @@ class LoginController extends Controller
                 Session::put('avatar', $user->avatar);
                 Session::put('position', $user->position);
                 Session::put('department', $user->department);
+
                 return redirect()->route('home')->with('success', 'LOGIN SUCCESSFULLY :)');
             } else {
                 return redirect('login')->with('error', 'WRONG USERNAME OR PASSWORD :(');
             }
-           
-        } catch(\Exception $e) {
+
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'FAIL LOGIN :(');
         }
     }
 
-    public function logout( Request $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         // forget login session
@@ -102,7 +96,7 @@ class LoginController extends Controller
         $request->session()->forget('position');
         $request->session()->forget('department');
         $request->session()->flush();
+
         return redirect('login')->with('success', 'LOGOUT SUCCESSFULLY :)');
     }
-
 }
