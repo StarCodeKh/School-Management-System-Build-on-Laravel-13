@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'admin@example.com',
             'role_name' => Role::SuperAdmin,
+            'password' => 'Password@123',
         ]);
     }
 }
