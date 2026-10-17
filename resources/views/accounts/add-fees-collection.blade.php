@@ -28,10 +28,10 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
                                             <label>Student Name <span class="login-danger">*</span></label>
-                                            <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="student_name" name="student_name">
+                                            <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="student_id" name="student_id">
                                                 <option selected disabled>-- Select --</option>
                                                 @foreach($users as $key => $names)
-                                                    <option value="{{ $names->name }}"data-student_id={{ $names->user_id }} {{ old('full_name') == $names->name ? "selected" :""}}>{{ $names->name }}</option>
+                                                    <option value="{{ $names->id }}" data-code="{{ $names->user_id }}" @selected(old('student_id') == $names->id)>{{ $names->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -39,27 +39,16 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
                                             <label>Student ID <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control" id="student_id" name="student_id" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <div class="form-group local-forms">
-                                            <label>Gender <span class="login-danger">*</span></label>
-                                            <select class="form-control select" name="gender">
-                                                <option selected disabled>Select Gender</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Others">Others</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="student_code" readonly>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
                                             <label>Fees Type <span class="login-danger">*</span></label>
-                                            <select class="form-control select" id="fees_type" name="fees_type">
+                                            <select class="form-control select" id="fee_type_id" name="fee_type_id">
                                                 <option selected disabled>-- Select Type --</option>
-                                                @foreach($feesType as $key => $feesTypes)
-                                                    <option value="{{ $feesTypes->fees_type }}"> {{ $feesTypes->fees_type }}</option>
+                                                @foreach($feeTypes as $feeType)
+                                                    <option value="{{ $feeType->id }}" @selected(old('fee_type_id') == $feeType->id)>{{ $feeType->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -67,13 +56,13 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
                                             <label>Fees Amount <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control" id="fees_amount" name="fees_amount" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('fees_amount') }}">
+                                            <input type="text" class="form-control" id="amount" name="amount" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('amount') }}">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms calendar-icon">
                                             <label>Paid Date <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control datetimepicker" id="paid_date" name="paid_date" placeholder="DD-MM-YYYY">
+                                            <input type="text" class="form-control datetimepicker" id="paid_date" name="paid_date" placeholder="DD-MM-YYYY" value="{{ old('paid_date') }}">
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -92,9 +81,9 @@
     @section('script')
     <script>
         // select auto id and email
-        $('#student_name').on('change',function()
+        $('#student_id').on('change',function()
         {
-            $('#student_id').val($(this).find(':selected').data('student_id'));
+            $('#student_code').val($(this).find(':selected').data('code'));
         });
     </script>
     @endsection

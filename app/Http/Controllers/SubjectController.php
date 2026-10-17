@@ -121,6 +121,7 @@ class SubjectController extends Controller
                     'subject_id' => $request->subject_id,
                 ]);
 
+                DB::rollback();
                 return redirect()->back()->with('error', 'Subject record not found!');
             }
         } catch (\Exception $e) {

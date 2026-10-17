@@ -78,6 +78,7 @@ class StudentController extends Controller
             }
     
             Log::warning('File Upload Missing', ['email' => $validated['email']]);
+            DB::rollback();
             return redirect()->back()->with('error', 'Upload file is required.');
         } catch (\Exception $e) {
             DB::rollback();
@@ -125,8 +126,9 @@ class StudentController extends Controller
                 }
                 $upload_file = time() . '_' . $request->file('upload')->getClientOriginalName();
                 $request->file('upload')->move(public_path('student-photos'), $upload_file);
+                $upload_path = 'student-photos/' . $upload_file;
             } else {
-                $upload_file = $oldImagePath;
+                $upload_path = $oldImagePath;
             }
     
             // Update the student record
@@ -143,7 +145,7 @@ class StudentController extends Controller
                 'section'       => $validated['section'],
                 'admission_id'  => $validated['admission_id'],
                 'phone_number'  => $validated['phone_number'],
-                'upload'        => 'student-photos/' . $upload_file, // Update the upload field
+                'upload'        => $upload_path,
             ]);
     
             DB::commit();

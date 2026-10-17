@@ -45,7 +45,7 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
                                             <label>Date Of Birth <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control datetimepicker" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ $users->date_of_birth }}">
+                                            <input type="text" class="form-control datetimepicker" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ $users->date_of_birth?->format('d-m-Y') }}">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4">
@@ -64,8 +64,8 @@
                                             <label>Role Name <span class="login-danger">*</span></label>
                                             <select class="form-control select" name="role_name" id="role_name">
                                                 <option selected disabled>Role Type</option>
-                                                @foreach ($role as $name)
-                                                    <option value="{{ $name->role_type }}" {{ $users->role_name == $name->role_type ? 'selected' : '' }}>{{ $name->role_type }}</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->value }}" @selected($users->role_name === $role)>{{ $role->label() }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

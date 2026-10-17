@@ -89,18 +89,18 @@
                                                     value="something">
                                             </div>
                                         </td>
-                                        <td hidden class="teacher_id">{{ $list->teacher_id }}</td>
-                                        <td>{{ $list->teacher_id }}</td>
+                                        <td hidden class="teacher_id">{{ $list->id }}</td>
+                                        <td>{{ $list->user?->user_id }}</td>
                                         <td>
                                             <h2 class="table-avatar">
                                                 <a href="teacher-details.html" class="avatar avatar-sm me-2">
-                                                    @if (!empty($list->avatar))
-                                                        <img class="avatar-img rounded-circle" src="{{ URL::to('images/'.$list->avatar) }}" alt="{{ $list->name }}">
+                                                    @if (!empty($list->user?->avatar))
+                                                        <img class="avatar-img rounded-circle" src="{{ URL::to('images/'.$list->user->avatar) }}" alt="{{ $list->full_name }}">
                                                     @else
-                                                        <img class="avatar-img rounded-circle" src="{{ URL::to('images/photo_defaults.jpg') }}" alt="{{ $list->name }}">
+                                                        <img class="avatar-img rounded-circle" src="{{ URL::to('images/photo_defaults.jpg') }}" alt="{{ $list->full_name }}">
                                                     @endif
                                                 </a>
-                                                <a href="teacher-details.html">{{ $list->name }}</a>
+                                                <a href="teacher-details.html">{{ $list->full_name }}</a>
                                             </h2>
                                         </td>
                                         <td>10</td>
@@ -111,7 +111,7 @@
                                         <td>{{ $list->address }}</td>
                                         <td class="text-end">
                                             <div class="actions">
-                                                <a href="{{ url('teacher/edit/'.$list->teacher_id) }}" class="btn btn-sm bg-danger-light">
+                                                <a href="{{ url('teacher/edit/'.$list->id) }}" class="btn btn-sm bg-danger-light">
                                                     <i class="far fa-edit me-2"></i>
                                                 </a>
                                                 <a class="btn btn-sm bg-danger-light teacher_delete" data-bs-toggle="modal" data-bs-target="#teacherDelete">

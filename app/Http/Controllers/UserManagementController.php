@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
+use App\Enums\Role;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
-use Session;
 use Auth;
 use Log;
 use DB;
@@ -25,18 +27,26 @@ class UserManagementController extends Controller
     public function userView($id)
     {
         $users = User::where('user_id',$id)->first();
-        $role  = DB::table('role_type_users')->get();
-        return view('usermanagement.user_update',compact('users','role'));
+        $roles = Role::cases();
+        return view('usermanagement.user_update',compact('users','roles'));
     }
 
     /** User Update */
     public function userUpdate(Request $request)
     {
+        $request->validate([
+            'user_id'       => 'required|exists:users,user_id',
+            'name'          => 'required|string|max:255',
+            'email'         => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($request->user_id, 'user_id')],
+            'role_name'     => ['required', Rule::enum(Role::class)],
+            'date_of_birth' => 'nullable|date',
+            'phone_number'  => 'nullable|string|max:20',
+        ]);
+
         DB::beginTransaction();
         try {
-            if (Session::get('role_name') === 'Admin' || Session::get('role_name') === 'Super Admin')
+            if (Gate::allows('manage-users'))
             {
-                $user_id       = $request->user_id;
                 $name          = $request->name;
                 $email         = $request->email;
                 $role_name     = $request->role_name;
@@ -66,7 +76,6 @@ class UserManagementController extends Controller
                 }
     
                 $update = [
-                    'user_id'       => $user_id,
                     'name'          => $name,
                     'role_name'     => $role_name,
                     'email'         => $email,
@@ -78,12 +87,13 @@ class UserManagementController extends Controller
                     'avatar'        => $image_name,
                 ];
     
-                User::where('user_id', $request->user_id)->update($update);
+                User::where('user_id', $request->user_id)->firstOrFail()->update($update);
             } else {
                 Log::warning('Unauthorized user update attempt', [
                     'user_id' => $request->user_id,
-                    'role'    => Session::get('role_name'),
+                    'role'    => $request->user()->role_name?->value,
                 ]);
+                DB::rollback();
                 return redirect()->back()->with('error', 'User update failed: Unauthorized access.');
             }
     
@@ -107,16 +117,18 @@ class UserManagementController extends Controller
     {
         DB::beginTransaction();
         try {
-            if (Session::get('role_name') === 'Super Admin' || Session::get('role_name') === 'Admin')
+            if (Gate::allows('manage-users'))
             {
-                if ($request->avatar == 'photo_defaults.jpg')
-                {
-                    User::destroy($request->user_id);
-                } else {
-                    User::destroy($request->user_id);
-                    unlink('images/'.$request->avatar);
+                $user = User::where('user_id', $request->user_id)->firstOrFail();
+                $user->delete();
+
+                // remove the stored avatar (taken from the database, not the request)
+                $avatarPath = public_path('images/'.$user->avatar);
+                if ($user->avatar && $user->avatar !== 'photo_defaults.jpg' && file_exists($avatarPath)) {
+                    unlink($avatarPath);
                 }
             } else {
+                DB::rollback();
                 return redirect()->back()->with('error', 'User deleted fail :(');
             }
 

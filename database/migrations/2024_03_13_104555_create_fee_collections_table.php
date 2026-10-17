@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_additional_charges', function (Blueprint $table) {
+        Schema::create('fee_collections', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_id')->nullable();
-            $table->string('service_charge')->nullable();
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('fee_type_id')->constrained()->restrictOnDelete();
+            $table->decimal('amount', 12, 2);
+            $table->date('paid_date');
             $table->timestamps();
+
+            $table->index('paid_date');
         });
     }
 
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoice_additional_charges');
+        Schema::dropIfExists('fee_collections');
     }
 };

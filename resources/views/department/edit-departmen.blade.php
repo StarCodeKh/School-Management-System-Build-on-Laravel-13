@@ -45,7 +45,7 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms calendar-icon">
                                             <label>Department Start Date <span class="login-danger">*</span></label>
-                                            <input class="form-control datetimepicker" type="text"placeholder="DD-MM-YYYY" name="department_start_date" value="{{ $department->department_start_date }}">
+                                            <input class="form-control datetimepicker" type="text"placeholder="DD-MM-YYYY" name="department_start_date" value="{{ $department->department_start_date?->format('d-m-Y') }}">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4">

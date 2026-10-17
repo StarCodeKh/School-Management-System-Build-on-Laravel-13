@@ -151,7 +151,7 @@
                             <img class="rounded-circle" src="/images/{{ Session::get('avatar') }}" width="31"alt="">
                             <div class="user-text">
                                 <h6>{{ Session::get('name') }}</h6>
-                                <p class="text-muted mb-0">{{ Session::get('role_name') }}</p>
+                                <p class="text-muted mb-0">{{ auth()->user()?->role_name?->label() }}</p>
                             </div>
                         </span>
                     </a>
@@ -162,7 +162,7 @@
                             </div>
                             <div class="user-text">
                                 <h6>{{ Session::get('name') }}</h6>
-                                <p class="text-muted mb-0">{{ Session::get('role_name') }}</p>
+                                <p class="text-muted mb-0">{{ auth()->user()?->role_name?->label() }}</p>
                             </div>
                         </div>
                         <a class="dropdown-item" href="{{ route('user/profile/page') }}">My Profile</a>

@@ -102,7 +102,7 @@
                                                 </h2>
                                             </td>
                                             <td>{{ $list->class }} {{ $list->section }}</td>
-                                            <td>{{ $list->date_of_birth }}</td>
+                                            <td>{{ $list->date_of_birth?->format('d-m-Y') }}</td>
                                             <td>Soeng Soeng</td>
                                             <td>{{ $list->phone_number }}</td>
                                             <td>110 Sen Sok Steet,PP</td>

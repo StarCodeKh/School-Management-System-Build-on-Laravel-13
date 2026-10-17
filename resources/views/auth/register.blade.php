@@ -23,8 +23,8 @@
                     <label>Role Name <span class="login-danger">*</span></label>
                     <select class="form-control select @error('role_name') is-invalid @enderror" name="role_name" id="role_name">
                         <option selected disabled>Role Type</option>
-                        @foreach ($role as $name)
-                            <option value="{{ $name->role_type }}">{{ $name->role_type }}</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->value }}" @selected(old('role_name') === $role->value)>{{ $role->label() }}</option>
                         @endforeach
                     </select>
                     @error('role_name')

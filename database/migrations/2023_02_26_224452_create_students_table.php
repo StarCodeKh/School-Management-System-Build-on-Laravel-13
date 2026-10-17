@@ -8,37 +8,35 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('date_of_birth')->nullable();
-            $table->string('roll')->nullable();
-            $table->string('blood_group')->nullable();
-            $table->string('religion')->nullable();
-            $table->string('email')->nullable();
-            $table->string('class')->nullable();
-            $table->string('section')->nullable();
-            $table->string('admission_id')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('upload')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('gender', 20);
+            $table->date('date_of_birth');
+            $table->string('roll', 50);
+            $table->string('blood_group', 10);
+            $table->string('religion', 50);
+            $table->string('email')->unique();
+            $table->string('class', 50);
+            $table->string('section', 50);
+            $table->string('admission_id', 50)->unique();
+            $table->string('phone_number', 20);
+            $table->string('upload')->nullable(); // photo path
             $table->timestamps();
+
+            $table->index(['class', 'section']);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('students');
     }

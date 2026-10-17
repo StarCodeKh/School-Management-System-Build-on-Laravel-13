@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('department_id')->nullable();
-            $table->string('department_name')->nullable();
-            $table->string('head_of_department')->nullable();
-            $table->string('department_start_date')->nullable();
-            $table->string('no_of_students')->nullable();
+            $table->string('department_id')->nullable()->unique(); // display code, e.g. DEP-00001
+            $table->string('department_name')->unique();
+            $table->string('head_of_department');
+            $table->date('department_start_date');
+            $table->unsignedInteger('no_of_students')->default(0);
             $table->timestamps();
         });
     }

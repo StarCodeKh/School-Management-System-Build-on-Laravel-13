@@ -31,7 +31,7 @@
                                     <div class="col-lg-4 col-md-4">
                                         <div class="profile-user-box">
                                             <div class="profile-user-img">
-                                                <img src="{{ Storage::url('student-photos/'.$studentProfile->upload) }}" alt="Profile">
+                                                <img src="{{ asset($studentProfile->upload) }}" alt="Profile">
                                                 <div class="form-group students-up-files profile-edit-icon mb-0">
                                                     <div class="uplod d-flex">
                                                         <label class="file-upload profile-upbtn mb-0">
@@ -132,7 +132,7 @@
                                             </div>
                                             <div class="views-personal">
                                                 <h4>Date of Birth</h4>
-                                                <h5>{{ $studentProfile->date_of_birth }}</h5>
+                                                <h5>{{ $studentProfile->date_of_birth?->format('d-m-Y') }}</h5>
                                             </div>
                                         </div>
                                         <div class="personal-activity">

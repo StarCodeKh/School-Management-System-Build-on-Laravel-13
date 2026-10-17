@@ -63,9 +63,7 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
         
-        DB::beginTransaction();
         try {
-            
             $email     = $request->email;
             $password  = $request->password;
 
@@ -77,7 +75,6 @@ class LoginController extends Controller
                 Session::put('join_date', $user->join_date);
                 Session::put('phone_number', $user->phone_number);
                 Session::put('status', $user->status);
-                Session::put('role_name', $user->role_name);
                 Session::put('avatar', $user->avatar);
                 Session::put('position', $user->position);
                 Session::put('department', $user->department);
@@ -87,7 +84,6 @@ class LoginController extends Controller
             }
            
         } catch(\Exception $e) {
-            DB::rollback();
             return redirect()->back()->with('error', 'FAIL LOGIN :(');
         }
     }
@@ -102,7 +98,6 @@ class LoginController extends Controller
         $request->session()->forget('join_date');
         $request->session()->forget('phone_number');
         $request->session()->forget('status');
-        $request->session()->forget('role_name');
         $request->session()->forget('avatar');
         $request->session()->forget('position');
         $request->session()->forget('department');

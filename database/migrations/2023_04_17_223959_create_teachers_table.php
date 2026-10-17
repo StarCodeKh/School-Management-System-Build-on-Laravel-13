@@ -8,36 +8,31 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->string('teacher_id')->nullable();
-            $table->string('user_id')->nullable();
-            $table->string('full_name')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('date_of_birth')->nullable();
-            $table->string('qualification')->nullable();
-            $table->string('experience')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('country')->nullable();
+            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
+            $table->string('full_name');
+            $table->string('gender', 20);
+            $table->date('date_of_birth');
+            $table->string('qualification');
+            $table->unsignedTinyInteger('experience')->default(0); // years
+            $table->string('phone_number', 20);
+            $table->string('address');
+            $table->string('city', 100);
+            $table->string('state', 100);
+            $table->string('zip_code', 20);
+            $table->string('country', 100);
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('teachers');
     }

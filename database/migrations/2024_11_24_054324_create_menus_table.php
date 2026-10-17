@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('route')->nullable();
             $table->json('active_routes')->nullable();
             $table->string('pattern')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->integer('order')->default(0);
+            $table->foreignId('parent_id')->nullable()->constrained('menus')->cascadeOnDelete();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
@@ -38,7 +38,7 @@ return new class extends Migration
             'active_routes' => json_encode(['home', 'teacher/dashboard', 'student/dashboard']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 1,
+            'sort_order'     => 1,
             'is_active' => true,
         ]);
 
@@ -51,7 +51,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['home']),
                 'pattern'   => null,
                 'parent_id' => $dashboardMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -61,7 +61,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['teacher/dashboard']),
                 'pattern'   => null,
                 'parent_id' => $dashboardMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
             [
@@ -71,7 +71,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['student/dashboard']),
                 'pattern'   => null,
                 'parent_id' => $dashboardMenuId,
-                'order'     => 3,
+                'sort_order'     => 3,
                 'is_active' => true,
             ],
         ]);
@@ -84,7 +84,7 @@ return new class extends Migration
             'active_routes' => json_encode(['list/users']),
             'pattern'   => 'view/user/edit/*',
             'parent_id' => null,
-            'order'     => 2,
+            'sort_order'     => 2,
             'is_active' => true,
         ]);
 
@@ -97,7 +97,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['list/users']),
                 'pattern'   => 'view/user/edit/*',
                 'parent_id' => $userManagementMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
         ]);
@@ -110,7 +110,7 @@ return new class extends Migration
             'active_routes' => json_encode(['setting/page']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 3,
+            'sort_order'     => 3,
             'is_active' => true,
         ]);
 
@@ -123,7 +123,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['setting/page']),
                 'pattern'   => null,
                 'parent_id' => $settingsMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ]
         ]);
@@ -136,7 +136,7 @@ return new class extends Migration
             'active_routes' => json_encode(['student/list', 'student/grid', 'student/add/page']),
             'pattern'   => 'student/edit/*|student/profile/*',
             'parent_id' => null,
-            'order'     => 4,
+            'sort_order'     => 4,
             'is_active' => true,
         ]);
 
@@ -148,7 +148,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['student/list', 'student/grid']),
                 'pattern'   => null,
                 'parent_id' => $studentMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -158,7 +158,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['student/add/page']),
                 'pattern'   => null,
                 'parent_id' => $studentMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
             [
@@ -168,7 +168,7 @@ return new class extends Migration
                 'active_routes' => json_encode([]),
                 'pattern'   => 'student/edit/*',
                 'parent_id' => $studentMenuId,
-                'order'     => 3,
+                'sort_order'     => 3,
                 'is_active' => true,
             ],
             [
@@ -178,7 +178,7 @@ return new class extends Migration
                 'active_routes' => json_encode([]),
                 'pattern'   => 'student/profile/*',
                 'parent_id' => $studentMenuId,
-                'order'     => 4,
+                'sort_order'     => 4,
                 'is_active' => true,
             ],
         ]);
@@ -191,7 +191,7 @@ return new class extends Migration
             'active_routes' => json_encode(['teacher/add/page', 'teacher/list/page']),
             'pattern'   => 'teacher/edit/*',
             'parent_id' => null,
-            'order'     => 5,
+            'sort_order'     => 5,
             'is_active' => true,
         ]);
 
@@ -203,7 +203,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['teacher/list/page']),
                 'pattern'   => null,
                 'parent_id' => $teacherMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -213,7 +213,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['teacher/add/page']),
                 'pattern'   => null,
                 'parent_id' => $teacherMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
             [
@@ -223,7 +223,7 @@ return new class extends Migration
                 'active_routes' => json_encode([]),
                 'pattern'   => 'teacher/edit/*',
                 'parent_id' => $teacherMenuId,
-                'order'     => 3,
+                'sort_order'     => 3,
                 'is_active' => true,
             ],
         ]);
@@ -236,7 +236,7 @@ return new class extends Migration
             'active_routes' => json_encode(['department/list/page']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 6,
+            'sort_order'     => 6,
             'is_active' => true,
         ]);
 
@@ -248,7 +248,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['department/list/page']),
                 'pattern'   => null,
                 'parent_id' => $departmentMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -258,7 +258,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['department/add/page']),
                 'pattern'   => null,
                 'parent_id' => $departmentMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
         ]);
@@ -271,7 +271,7 @@ return new class extends Migration
             'active_routes' => json_encode(['subject/list/page']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 7,
+            'sort_order'     => 7,
             'is_active' => true,
         ]);
 
@@ -283,7 +283,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['subject/list/page']),
                 'pattern'   => null,
                 'parent_id' => $subjectMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -293,7 +293,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['subject/add/page']),
                 'pattern'   => null,
                 'parent_id' => $subjectMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
         ]);
@@ -306,7 +306,7 @@ return new class extends Migration
             'active_routes' => json_encode(['invoice/list/page']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 8,
+            'sort_order'     => 8,
             'is_active' => true,
         ]);
 
@@ -318,7 +318,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['invoice/list/page']),
                 'pattern'   => null,
                 'parent_id' => $invoiceMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -328,7 +328,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['invoice/add/page']),
                 'pattern'   => null,
                 'parent_id' => $invoiceMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
         ]);
@@ -341,7 +341,7 @@ return new class extends Migration
             'active_routes' => json_encode(['account/fees/collections/page']),
             'pattern'   => null,
             'parent_id' => null,
-            'order'     => 9,
+            'sort_order'     => 9,
             'is_active' => true,
         ]);
 
@@ -353,7 +353,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['account/fees/collections/page']),
                 'pattern'   => null,
                 'parent_id' => $accountsMenuId,
-                'order'     => 1,
+                'sort_order'     => 1,
                 'is_active' => true,
             ],
             [
@@ -363,7 +363,7 @@ return new class extends Migration
                 'active_routes' => json_encode([]),
                 'pattern'   => null,
                 'parent_id' => $accountsMenuId,
-                'order'     => 2,
+                'sort_order'     => 2,
                 'is_active' => true,
             ],
             [
@@ -373,7 +373,7 @@ return new class extends Migration
                 'active_routes' => json_encode([]),
                 'pattern'   => null,
                 'parent_id' => $accountsMenuId,
-                'order'     => 3,
+                'sort_order'     => 3,
                 'is_active' => true,
             ],
             [
@@ -383,7 +383,7 @@ return new class extends Migration
                 'active_routes' => json_encode(['add/fees/collection/page']),
                 'pattern'   => null,
                 'parent_id' => $accountsMenuId,
-                'order'     => 4,
+                'sort_order'     => 4,
                 'is_active' => true,
             ],
         ]);

@@ -30,22 +30,21 @@
                         <div class="card-body">
                             <form action="{{ route('invoice/update/save') }}" class="invoices-form" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="invoice_id" value="{{ $invoiceView->invoice_id }}">
+                                <input type="hidden" name="invoice_number" value="{{ $invoice->invoice_number }}">
                                 <div class="invoices-main-form">
                                     <div class="row">
                                         <div class="col-xl-4 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label>Customer Name</label>
-                                                <select class="select select2s-hidden-accessible @error('full_name') is-invalid @enderror" style="width: 100%;" tabindex="-1" aria-hidden="true" id="customer_name" name="customer_name">
-                                                    <option>{{ $invoiceView->customer_name }}</option>
+                                                <select class="select select2s-hidden-accessible @error('full_name') is-invalid @enderror" style="width: 100%;" tabindex="-1" aria-hidden="true" id="customer_id" name="customer_id">
                                                     @foreach($users as $key => $names)
-                                                        <option value="{{ $names->name }}"data-teacher_id={{ $names->user_id }} {{ old('full_name') == $names->name ? "selected" :""}}>{{ $names->name }}</option>
+                                                        <option value="{{ $names->id }}" @selected(old('customer_id', $invoice->customer_id) == $names->id)>{{ $names->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Po Number</label>
-                                                <input class="form-control" type="text" id="po_number" name="po_number" value="{{ $invoiceView->po_number }}">
+                                                <input class="form-control" type="text" id="po_number" name="po_number" value="{{ $invoice->po_number }}">
                                             </div>
                                         </div>
                                         
@@ -53,21 +52,21 @@
                                             <h4 class="invoice-details-title">Invoice details</h4>
                                             <div class="invoice-details-box">
                                                 <div class="invoice-inner-head">
-                                                    <span>Invoice No. <a>{{ $invoiceView->invoice_id }}</a></span>
+                                                    <span>Invoice No. <a>{{ $invoice->invoice_number }}</a></span>
                                                 </div>
                                                 <div class="invoice-inner-footer">
                                                     <div class="row align-items-center">
                                                         <div class="col-lg-6 col-md-6">
                                                             <div class="invoice-inner-date">
                                                                 <span>
-                                                                    Date <input class="form-control datetimepicker" type="text" name="date" value="{{ date('d-m-Y') }}">
+                                                                    Date <input class="form-control datetimepicker" type="text" name="date" value="{{ ($invoice->invoice_date ?? now())->format('d-m-Y') }}">
                                                                 </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6 col-md-6">
                                                             <div class="invoice-inner-date invoice-inner-datepic">
                                                                 <span>
-                                                                    Due Date <input class="form-control datetimepicker" type="text" name="due_date" value="{{ $invoiceView->due_date }}">
+                                                                    Due Date <input class="form-control datetimepicker" type="text" name="due_date" value="{{ $invoice->due_date?->format('d-m-Y') }}">
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -80,7 +79,7 @@
                                             <div class="inovices-month-info">
                                                 <div class="form-group mb-0">
                                                     <label class="custom_check w-100">
-                                                        @if(!empty($invoiceView->enable_tax))
+                                                        @if(!empty($invoice->enable_tax))
                                                             <input type="checkbox" checked id="enableTax" name="enable_tax" value="Enable tax">
                                                         @else
                                                             <input type="checkbox" id="enableTax" name="enable_tax" value="Enable tax">
@@ -88,21 +87,21 @@
                                                         <span class="checkmark"></span> Enable tax
                                                     </label>
                                                     <label class="custom_check w-100">
-                                                        @if(!empty($invoiceView->recurring_incoice))
-                                                        <input type="checkbox" checked id="chkYes" name="recurring_incoice" value="Recurring Invoice">
+                                                        @if(!empty($invoice->is_recurring))
+                                                        <input type="checkbox" checked id="chkYes" name="is_recurring" value="Recurring Invoice">
                                                         @else
-                                                        <input type="checkbox" id="chkYes" name="recurring_incoice" value="Recurring Invoice">
+                                                        <input type="checkbox" id="chkYes" name="is_recurring" value="Recurring Invoice">
                                                         @endif
                                                         <span class="checkmark"></span> Recurring Invoice
                                                     </label>
                                                 </div>
-                                                @if(!empty($invoiceView->recurring_incoice))
+                                                @if(!empty($invoice->is_recurring))
                                                 <div id="show">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <select class="select" id="by_month" name="by_month">
-                                                                    <option selected>{{ $invoiceView->by_month }}</option>
+                                                                    <option selected>{{ $invoice->recurring_by_month }}</option>
                                                                     <option value="March">March</option>
                                                                     <option value="April">April</option>
                                                                     <option value="May">May</option>
@@ -113,7 +112,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <input class="form-control" type="text" name="month" value="{{ $invoiceView->month }}">
+                                                                <input class="form-control" type="text" name="month" value="{{ $invoice->recurring_month }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -130,13 +129,13 @@
                                         <div class="col-xl-4 col-lg-6 col-md-6">
                                             <div class="invoice-info">
                                                 <strong class="customer-text">Invoice From</strong>
-                                                <textarea rows="1.5" class="form-control" name="invoice_from">{{ $invoiceView->invoice_from }}</textarea>
+                                                <textarea rows="1.5" class="form-control" name="invoice_from">{{ $invoice->invoice_from }}</textarea>
                                             </div>
                                         </div>
                                         <div class="col-xl-4 col-lg-6 col-md-6">
                                             <div class="invoice-info">
                                                 <strong class="customer-text">Invoice To</strong>
-                                                <textarea rows="1.5" class="form-control" name="invoice_to">{{ $invoiceView->invoice_to }}</textarea>
+                                                <textarea rows="1.5" class="form-control" name="invoice_to">{{ $invoice->invoice_to }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -158,10 +157,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($invoiceDetails as $key => $value)
+                                                @foreach($invoice->items as $key => $value)
                                                     <tr class="add-row">
                                                         <td hidden><input type="text" class="form-control" name="id[]" value="{{ $value->id }}"></td>
-                                                        <td><input type="text" class="form-control" name="items[]" value="{{ $value->items }}"></td>
+                                                        <td><input type="text" class="form-control" name="items[]" value="{{ $value->item }}"></td>
                                                         <td><input type="text" class="form-control" name="category[]" value="{{ $value->category }}"></td>
                                                         <td><input type="text" class="form-control" name="quantity[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ $value->quantity }}"></td>
                                                         <td><input type="text" class="form-control price" name="price[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ $value->price }}"></td>
@@ -184,7 +183,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-7 col-md-6">
-                                        @if(empty($invoiceView->account_holder_name))
+                                        @if(empty($invoice->account_holder_name))
                                             <div class="invoice-fields">
                                                 <h4 class="field-title">More Fields</h4>
                                                 <div id="btn-add-bank-details" class="field-box">
@@ -202,7 +201,7 @@
                                             </div>
                                             <br>
                                         @endif
-                                        @if(!empty($invoiceView->account_holder_name))
+                                        @if(!empty($invoice->account_holder_name))
                                             <div id="bank-details-em" class="bank-inner-details">
                                         @else
                                             <div id="bank-details" class="bank-inner-details">
@@ -211,25 +210,25 @@
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="form-group">
                                                         <label>Account Holder Name</label>
-                                                        <input type="text" class="form-control" id="auto_account_holder_name" name="account_holder_name" placeholder="Add Name" value="{{ $invoiceView->account_holder_name }}">
+                                                        <input type="text" class="form-control" id="auto_account_holder_name" name="account_holder_name" placeholder="Add Name" value="{{ $invoice->account_holder_name }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="form-group">
                                                         <label>Bank name</label>
-                                                        <input type="text" class="form-control" id="auto_bank_name" name="bank_name" placeholder="Add Bank name" value="{{ $invoiceView->bank_name }}">
+                                                        <input type="text" class="form-control" id="auto_bank_name" name="bank_name" placeholder="Add Bank name" value="{{ $invoice->bank_name }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="form-group">
                                                         <label>IFSC Code</label>
-                                                        <input type="text" class="form-control" id="auto_ifsc_code" name="ifsc_code" placeholder="IFSC Code" value="{{ $invoiceView->ifsc_code }}">
+                                                        <input type="text" class="form-control" id="auto_ifsc_code" name="ifsc_code" placeholder="IFSC Code" value="{{ $invoice->ifsc_code }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="form-group">
                                                         <label>Account Number</label>
-                                                        <input type="text" class="form-control" id="auto_account_number" name="account_number" placeholder="Account Number" value="{{ $invoiceView->account_number }}">
+                                                        <input type="text" class="form-control" id="auto_account_number" name="account_number" placeholder="Account Number" value="{{ $invoice->account_number }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -248,7 +247,7 @@
                                                         </div>
                                                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" data-bs-parent="#accordion">
                                                             <div class="panel-body">
-                                                                <textarea class="form-control" name="add_terms_and_conditions"></textarea>
+                                                                <textarea class="form-control" name="terms_and_conditions">{{ $invoice->terms_and_conditions }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -264,7 +263,7 @@
                                                         </div>
                                                         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" data-bs-parent="#accordion">
                                                             <div class="panel-body">
-                                                                <textarea class="form-control" name="add_notes"></textarea>
+                                                                <textarea class="form-control" name="notes">{{ $invoice->notes }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -278,13 +277,13 @@
                                             <h4 class="invoice-total-title">Summary</h4>
                                             <div class="invoice-total-box">
                                                 <div class="invoice-total-inner">
-                                                    <input type="hidden" name="taxable_amount" id="taxable_amount" value="{{ $invoiceView->taxable_amount }}">
-                                                    <p>Taxable Amount <span id="">${{ $invoiceView->taxable_amount }}</span></p>
+                                                    <input type="hidden" name="taxable_amount" id="taxable_amount" value="{{ $invoice->taxable_amount }}">
+                                                    <p>Taxable Amount <span id="">${{ $invoice->taxable_amount }}</span></p>
                                                     <p>Round Off
-                                                        @if(!empty($invoiceView->round_off))
-                                                            <input type="checkbox" name="round_off" id="status_1" class="check" checked value="{{ $invoiceView->round_off }}">
+                                                        @if(!empty($invoice->round_off))
+                                                            <input type="checkbox" name="round_off" id="status_1" class="check" checked value="{{ $invoice->round_off }}">
                                                             <label for="status_1" class="checktoggle">checkbox</label>
-                                                            <span>${{ $invoiceView->round_off }}</span>
+                                                            <span>${{ $invoice->round_off }}</span>
                                                         @else 
                                                         <input type="checkbox" name="round_off" id="status_1" class="check" value="54">
                                                         <label for="status_1" class="checktoggle">checkbox</label>
@@ -294,14 +293,14 @@
                                                     <div class="links-info-one">
                                                         <div class="links-info"></div>
                                                     </div>
-                                                    @if(!empty($AdditionalCharges))  
-                                                        @foreach($AdditionalCharges as $key => $value)
+                                                    @if(!empty($invoice->additional_charges))  
+                                                        @foreach($invoice->additional_charges as $value)
                                                             <div class="service-amount">
                                                                 <a href="#" class="service-trash">
                                                                     <i class="fe fe-minus-circle me-1"></i>Service Charge
                                                                 </a> 
-                                                                <span>${{ $value->service_charge }}</span>
-                                                                <input type="hidden" name="service_charge[]" value="{{ $value->service_charge }}">
+                                                                <span>${{ $value }}</span>
+                                                                <input type="hidden" name="service_charge[]" value="{{ $value }}">
                                                             </div>
                                                         @endforeach
                                                     @endif
@@ -315,21 +314,21 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    @if(!empty($InvoiceDiscount))  
-                                                        @foreach($InvoiceDiscount as $key => $value)
+                                                    @if(!empty($invoice->discounts))  
+                                                        @foreach($invoice->discounts as $value)
                                                             <div class="service-amount">
                                                                 <a href="#" class="service-trash-one">
                                                                     <i class="fe fe-minus-circle me-1"></i> Offer new
                                                                 </a>
-                                                                <span>${{ $value->offer_new }}%</span>
-                                                                <input type="hidden" name="offer_new[]" value="{{ $value->offer_new }}">
+                                                                <span>${{ $value }}%</span>
+                                                                <input type="hidden" name="offer_new[]" value="{{ $value }}">
                                                             </div>
                                                         @endforeach
                                                     @endif
                                                 </div>
                                                 <div class="invoice-total-footer">
-                                                    <h4>Total Amount <span id="total_amount">$<span class="total_amount" name="total_amount">{{ $invoiceView->total_amount }}</span></span></h4>
-                                                    <input type="hidden" name="total_amount" value="{{ $invoiceView->total_amount }}">
+                                                    <h4>Total Amount <span id="total_amount">$<span class="total_amount" name="total_amount">{{ $invoice->total_amount }}</span></span></h4>
+                                                    <input type="hidden" name="total_amount" value="{{ $invoice->total_amount }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -337,12 +336,11 @@
                                         <div class="upload-sign">
                                             <div class="form-group service-upload">
                                                 <span>Update Sign</span>
-                                                <input type="file" name="upload_sign" multiple>
-                                                <img class="img-fluid d-inline-block" src="{{ asset($invoiceView->upload_sign) }}" alt="sign" style="width: 20%;">
-                                                <input type="hidden" name="upload_sign_unlink" value="{{ $invoiceView->upload_sign }}">
+                                                <input type="file" name="signature" accept="image/*">
+                                                <img class="img-fluid d-inline-block" src="{{ asset($invoice->signature_path) }}" alt="sign" style="width: 20%;">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" class="form-control" name="name_of_the_signatuaory" placeholder="Name of the Signatuaory" value="{{ $invoiceView->name_of_the_signatuaory }}">
+                                                <input type="text" class="form-control" name="signatory_name" placeholder="Name of the Signatory" value="{{ $invoice->signatory_name }}">
                                             </div>
                                             <div class="form-group float-end mb-0">
                                                 <button class="btn btn-primary" type="submit">Save Invoice</button>
@@ -593,8 +591,7 @@
                         <form action="{{ route('invoice/delete') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <input type="hidden" name="invoice_id" value="{{ $invoiceView->invoice_id }}">
-                                <input type="hidden" name="upload_sign" value="{{ $invoiceView->upload_sign }}">
+                                <input type="hidden" name="invoice_number" value="{{ $invoice->invoice_number }}">
                                 <div class="col-6">
                                     <button type="submit" class="btn btn-primary continue-btn submit-btn" style="border-radius: 5px !important;">Delete</button>
                                 </div>
@@ -668,7 +665,7 @@
         {{-- show hide [Recurring Invoice]--}}
         <script>
             $(function() {
-                $("input[name='recurring_incoice']").click(function() {
+                $("input[name='is_recurring']").click(function() {
                     if ($("#chkYes").is(":checked")) {
                         $("#show-invoices").show();
                     } else {

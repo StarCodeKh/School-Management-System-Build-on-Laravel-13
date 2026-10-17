@@ -70,7 +70,7 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms calendar-icon">
                                             <label>Date Of Birth <span class="login-danger">*</span></label>
-                                            <input class="form-control @error('date_of_birth') is-invalid @enderror" name="date_of_birth" type="text"  value="{{ $studentEdit->date_of_birth }}">
+                                            <input class="form-control @error('date_of_birth') is-invalid @enderror" name="date_of_birth" type="text"  value="{{ $studentEdit->date_of_birth?->format('d-m-Y') }}">
                                             @error('date_of_birth')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

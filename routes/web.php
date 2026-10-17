@@ -85,7 +85,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
 
     // 4. TEACHERS
     Route::prefix('teacher')->controller(TeacherController::class)->group(function () {
-        Route::get('edit/{teacher_id}', 'editRecord');
+        Route::get('edit/{teacher}', 'editRecord');
         Route::post('delete', 'teacherDelete')->name('teacher/delete');
 
         Route::middleware('auth')->group(function () {
@@ -105,7 +105,7 @@ Route::namespace('App\Http\Controllers')->group(function () {
         Route::post('save', 'saveRecord')->name('department/save');
         Route::post('update', 'updateRecord')->name('department/update');
         Route::post('delete', 'deleteRecord')->name('department/delete');
-        Route::get('get-data-list', '/get-data-list')->name('get-data-list');
+        Route::get('get-data-list', 'getDataList')->name('get-data-list');
     });
 
     // 6. SUBJECTS
@@ -138,8 +138,8 @@ Route::namespace('App\Http\Controllers')->group(function () {
             Route::get('cancelled/page', 'invoiceCancelled')->name('invoice/cancelled/page');
             Route::get('grid/page', 'invoiceGrid')->name('invoice/grid/page');
             Route::get('add/page', 'invoiceAdd')->name('invoice/add/page');
-            Route::get('edit/{invoice_id}', 'invoiceEdit')->name('invoice/edit/page');
-            Route::get('view/{invoice_id}', 'invoiceView')->name('invoice/view/page');
+            Route::get('edit/{invoice}', 'invoiceEdit')->name('invoice/edit/page');
+            Route::get('view/{invoice}', 'invoiceView')->name('invoice/view/page');
             Route::get('settings/page', 'invoiceSettings')->name('invoice/settings/page');
             Route::get('settings/tax/page', 'invoiceSettingsTax')->name('invoice/settings/tax/page');
             Route::get('settings/bank/page', 'invoiceSettingsBank')->name('invoice/settings/bank/page');

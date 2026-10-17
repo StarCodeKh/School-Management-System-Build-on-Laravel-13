@@ -35,10 +35,10 @@
                                         <div class="col-xl-4 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label>Customer Name</label>
-                                                <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="customer_name" name="customer_name">
+                                                <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="customer_id" name="customer_id">
                                                     <option selected disabled>-- Select Customer --</option>
                                                     @foreach($users as $key => $names)
-                                                        <option value="{{ $names->name }}" {{ old('full_name') == $names->name ? "selected" :""}}>{{ $names->name }}</option>
+                                                        <option value="{{ $names->id }}" @selected(old('customer_id') == $names->id)>{{ $names->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -83,7 +83,7 @@
                                                         <span class="checkmark"></span> Enable tax
                                                     </label>
                                                     <label class="custom_check w-100">
-                                                        <input type="checkbox" id="chkYes" name="recurring_incoice" value="Recurring Invoice">
+                                                        <input type="checkbox" id="chkYes" name="is_recurring" value="Recurring Invoice">
                                                         <span class="checkmark"></span> Recurring Invoice
                                                     </label>
                                                 </div>
@@ -228,7 +228,7 @@
                                                         </div>
                                                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" data-bs-parent="#accordion">
                                                             <div class="panel-body">
-                                                                <textarea class="form-control" name="add_terms_and_conditions"></textarea>
+                                                                <textarea class="form-control" name="terms_and_conditions"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -244,7 +244,7 @@
                                                         </div>
                                                         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" data-bs-parent="#accordion">
                                                             <div class="panel-body">
-                                                                <textarea class="form-control" name="add_notes"></textarea>
+                                                                <textarea class="form-control" name="notes"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -288,10 +288,10 @@
                                         <div class="upload-sign">
                                             <div class="form-group service-upload">
                                                 <span>Upload Sign</span>
-                                                <input type="file" name="upload_sign" multiple>
+                                                <input type="file" name="signature" accept="image/*">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" class="form-control @error('name_of_the_signatuaory') is-invalid @enderror" name="name_of_the_signatuaory" placeholder="Name of the Signatuaory">
+                                                <input type="text" class="form-control @error('signatory_name') is-invalid @enderror" name="signatory_name" placeholder="Name of the Signatory">
                                             </div>
                                             <div class="form-group float-end mb-0">
                                                 <button class="btn btn-primary" type="submit">Save Invoice</button>
@@ -612,7 +612,7 @@
         {{-- show hide [Recurring Invoice]--}}
         <script>
             $(function() {
-                $("input[name='recurring_incoice']").click(function() {
+                $("input[name='is_recurring']").click(function() {
                     if ($("#chkYes").is(":checked")) {
                         $("#show-invoices").show();
                     } else {

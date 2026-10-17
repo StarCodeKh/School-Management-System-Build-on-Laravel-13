@@ -55,7 +55,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms calendar-icon">
                                         <label>Date Of Birth <span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control datetimepicker @error('date_of_birth') is-invalid @enderror" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ $teacher->date_of_birth }}">
+                                        <input type="text" class="form-control datetimepicker @error('date_of_birth') is-invalid @enderror" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ $teacher->date_of_birth?->format('d-m-Y') }}">
                                         @error('date_of_birth')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -66,7 +66,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms calendar-icon">
                                         <label>Joining Date <span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control @error('joining_date') is-invalid @enderror" name="joining_date" value="{{ $teacher->join_date}}" readonly>
+                                        <input type="text" class="form-control @error('joining_date') is-invalid @enderror" name="joining_date" value="{{ $teacher->user?->join_date?->format('d-m-Y') }}" readonly>
                                         @error('joining_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

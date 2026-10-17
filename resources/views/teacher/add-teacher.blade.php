@@ -28,13 +28,13 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
                                         <label>Full Name<span class="login-danger">*</span></label>
-                                        <select class="select select2s-hidden-accessible @error('full_name') is-invalid @enderror" style="width: 100%;" tabindex="-1" aria-hidden="true" id="full_name" name="full_name">
+                                        <select class="select select2s-hidden-accessible @error('user_id') is-invalid @enderror" style="width: 100%;" tabindex="-1" aria-hidden="true" id="user_id" name="user_id">
                                             <option selected disabled>-- Select Name --</option>
                                             @foreach($users as $key => $names)
-                                                <option value="{{ $names->name }}"data-teacher_id={{ $names->user_id }} {{ old('full_name') == $names->name ? "selected" :""}}>{{ $names->name }}</option>
+                                                <option value="{{ $names->id }}" data-code="{{ $names->user_id }}" @selected(old('user_id') == $names->id)>{{ $names->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('full_name')
+                                        @error('user_id')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -44,7 +44,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
                                         <label>Teacher ID <span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control" name="teacher_id" id="teacher_id" placeholder="Teacher ID" value="{{ old('teacher_id') }}" readonly>
+                                        <input type="text" class="form-control" id="teacher_code" placeholder="Teacher ID" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-4">
@@ -182,9 +182,9 @@
 @section('script')
 <script>
     // select auto teacher id
-    $('#full_name').on('change',function()
+    $('#user_id').on('change',function()
     {
-        $('#teacher_id').val($(this).find(':selected').data('teacher_id'));
+        $('#teacher_code').val($(this).find(':selected').data('code'));
     });
 </script>
 @endsection

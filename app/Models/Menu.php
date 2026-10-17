@@ -17,7 +17,7 @@ class Menu extends Model
         'pattern',
         'custom_active_pattern',
         'parent_id',
-        'order',
+        'sort_order',
         'is_active',
     ];
 
@@ -27,7 +27,7 @@ class Menu extends Model
 
     public function children()
     {
-        return $this->hasMany(Menu::class, 'parent_id')->orderBy('order');
+        return $this->hasMany(Menu::class, 'parent_id')->orderBy('sort_order');
     }
 
     public function parent()

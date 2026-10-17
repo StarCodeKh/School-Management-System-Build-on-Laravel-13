@@ -255,7 +255,7 @@
                     <div class="col-sm-6 col-lg-4 col-xl-3 d-flex">
                         <div class="card invoices-grid-card w-100">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <a href="{{ url('invoice/edit/'.$value->invoice_id) }}" class="invoice-grid-link">{{ $value->invoice_id }}</a>
+                                <a href="{{ url('invoice/edit/'.$value->invoice_number) }}" class="invoice-grid-link">{{ $value->invoice_number }}</a>
                                 <div class="dropdown dropdown-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v"></i>
@@ -264,7 +264,7 @@
                                         <a class="dropdown-item" href="edit-invoice.html">
                                             <i class="far fa-edit me-2"></i>Edit
                                         </a>
-                                        <a class="dropdown-item" href="{{ url('invoice/view/'.$value->invoice_id) }}">
+                                        <a class="dropdown-item" href="{{ url('invoice/view/'.$value->invoice_number) }}">
                                             <i class="far fa-eye me-2"></i>View Detail
                                         </a>
                                         <a class="dropdown-item" href="javascript:void(0);">
@@ -288,7 +288,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <span><i class="far fa-calendar-alt"></i> Due Date</span>
-                                        <h6 class="mb-0">{{ \Carbon\Carbon::parse($value->due_date)->format('d M Y') }}</h6>
+                                        <h6 class="mb-0">{{ $value->due_date->format('d M Y') }}</h6>
                                     </div>
                                 </div>
                             </div>

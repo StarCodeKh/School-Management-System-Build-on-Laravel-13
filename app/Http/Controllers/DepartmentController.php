@@ -107,10 +107,10 @@ class DepartmentController extends Controller
     {
         // Validate input data
         $request->validate([
-            'department_name'       => 'required|string',
-            'head_of_department'    => 'required|string',
-            'department_start_date' => 'required|string',
-            'no_of_students'        => 'required|string',
+            'department_name'       => 'required|string|max:255|unique:departments,department_name',
+            'head_of_department'    => 'required|string|max:255',
+            'department_start_date' => 'required|date',
+            'no_of_students'        => 'required|integer|min:0',
         ]);
     
         DB::beginTransaction();
@@ -138,6 +138,14 @@ class DepartmentController extends Controller
     /** Update Record */
     public function updateRecord(Request $request)
     {
+        $request->validate([
+            'department_id'         => 'required|exists:departments,department_id',
+            'department_name'       => 'required|string|max:255|unique:departments,department_name,'.$request->department_id.',department_id',
+            'head_of_department'    => 'required|string|max:255',
+            'department_start_date' => 'required|date',
+            'no_of_students'        => 'required|integer|min:0',
+        ]);
+
         DB::beginTransaction();
         try {
             $updateRecord = [
@@ -147,7 +155,7 @@ class DepartmentController extends Controller
                 'no_of_students'        => $request->no_of_students,
             ];
     
-            Department::where('department_id', $request->department_id)->update($updateRecord);
+            Department::where('department_id', $request->department_id)->firstOrFail()->update($updateRecord);
             DB::commit();
             return redirect()->back()->with('success', 'Department record updated successfully!');
         } catch (\Exception $e) {

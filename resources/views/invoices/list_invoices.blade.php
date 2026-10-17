@@ -347,10 +347,10 @@
                                                     <input type="checkbox" name="invoice">
                                                     <span class="checkmark"></span>
                                                 </label>
-                                                <a href="{{ url('invoice/edit/'.$value->invoice_id) }}" class="invoice-link">{{ $value->invoice_id }}</a>
+                                                <a href="{{ url('invoice/edit/'.$value->invoice_number) }}" class="invoice-link">{{ $value->invoice_number }}</a>
                                             </td>
-                                            <td>{{ $value->category }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($value->created_at)->format('d M Y') }}</td>
+                                            <td>{{ $value->items->first()?->category }}</td>
+                                            <td>{{ $value->created_at->format('d M Y') }}</td>
                                             <td>
                                                 <h2 class="table-avatar">
                                                     <a href="profile.html">
@@ -359,7 +359,7 @@
                                                 </h2>
                                             </td>
                                             <td class="text-primary">$ {{ $value->total_amount }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($value->due_date)->format('d M Y') }}</td>
+                                            <td>{{ $value->due_date->format('d M Y') }}</td>
                                             <td><span class="badge bg-success-light">Paid</span></td>
                                             <td class="text-end">
                                                 <div class="dropdown dropdown-action">
@@ -371,7 +371,7 @@
                                                         <a class="dropdown-item" href="edit-invoice.html">
                                                             <i class="far fa-edit me-2"></i>Edit
                                                         </a>
-                                                        <a class="dropdown-item" href="{{ url('invoice/view/'.$value->invoice_id) }}">
+                                                        <a class="dropdown-item" href="{{ url('invoice/view/'.$value->invoice_number) }}">
                                                             <i class="far fa-eye me-2"></i>View Detail
                                                         </a>
                                                         <a class="dropdown-item" href="javascript:void(0);">
