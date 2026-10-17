@@ -31,7 +31,6 @@ Route::namespace('App\Http\Controllers\Auth')->group(function () {
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'authenticate');
         Route::get('/logout', 'logout')->name('logout');
-        Route::post('change/password', 'changePassword')->name('change/password');
     });
 
     Route::controller(RegisterController::class)->group(function () {
